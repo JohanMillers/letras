@@ -8,7 +8,8 @@ function App() {
   //Definir el state
   const [busquedaletra, setBusquedaLetra] = useState({});
   const [letras, setLetra] = useState('');
-  useEffect(() => {
+  const [info, setInfo] = useState({});
+    useEffect(() => {
     //forma para saber sin un objecto esta vacio
     if(Object.keys(busquedaletra).length === 0 ) return;
     //forma para saber sin un objecto esta vacio
@@ -17,10 +18,19 @@ function App() {
 
       const {artista, cancion} = busquedaletra;
       const Url = `https://api.lyrics.ovh/v1/${artista}/${cancion}`;
+      const Url2 = `https://theaudiodb.com/api/v1/json/1/search.php?s=${artista}`;
 
-      const resultado =  await axios(Url);
+      const [letra, informacion] = await Promise.all([
+        axios(Url),
+        axios(Url2)
+      ]);
 
-      setLetra(resultado.data.lyrics);
+      setLetra(letra.data.lyrics);
+      setInfo(informacion.data.artists[0]);
+
+      
+
+      // setLetra(resultado.data.lyrics);
 
 
     }
