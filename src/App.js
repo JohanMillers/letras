@@ -1,24 +1,38 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {Fragment,useState,useEffect} from 'react';
+import axios from 'axios';
+import Formulario from './Componentes/Formulario';
+
 
 function App() {
+  //Definir el state
+  const [busquedaletra, setBusquedaLetra] = useState({});
+  const [letras, setLetra] = useState('');
+  useEffect(() => {
+    //forma para saber sin un objecto esta vacio
+    if(Object.keys(busquedaletra).length === 0 ) return;
+    //forma para saber sin un objecto esta vacio
+
+    const consultaApiLetra = async () => {
+
+      const {artista, cancion} = busquedaletra;
+      const Url = `https://api.lyrics.ovh/v1/${artista}/${cancion}`;
+
+      const resultado =  await axios(Url);
+
+      setLetra(resultado.data.lyrics);
+
+
+    }
+    consultaApiLetra();
+  }, [busquedaletra]);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Fragment>
+      <Formulario 
+        setBusquedaLetra={setBusquedaLetra}
+      
+      />
+    </Fragment>
+   
   );
 }
 
